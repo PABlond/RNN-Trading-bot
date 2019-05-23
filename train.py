@@ -42,8 +42,7 @@ def main():
                 data = DataModel()
                 x = data.get_train_data(
                     data=dataset,
-                    seq_len=sequence_length
-                )
+                    seq_len=sequence_length)
                 X_train, X_test, y_train, y_test = train_test_split(data.dataX, data.dataY, test_size=0.33)
         
                 # 5) Train the model       
@@ -51,9 +50,7 @@ def main():
                     X_train, X_test, y_train, y_test,
                     epochs = epochs,
                     batch_size = batch_size,
-                    save_dir = save_dir
-                
-                )
+                    save_dir = save_dir)
         
 
 if __name__ == '__main__':
