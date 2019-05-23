@@ -36,12 +36,9 @@ def main():
             chunksize = 10 ** 4
             for chunk in pd.read_csv(filename, chunksize=chunksize):
                 # 4) Get and prepare data
-                dataset = []
-                for x in chunk.get(cols).values.tolist():
-                    dataset.append(x)
                 data = DataModel()
                 x = data.get_train_data(
-                    data=dataset,
+                    data=[x for x in chunk.get(cols).values.tolist()],
                     seq_len=sequence_length)
                 X_train, X_test, y_train, y_test = train_test_split(data.dataX, data.dataY, test_size=0.33)
         

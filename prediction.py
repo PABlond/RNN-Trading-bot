@@ -42,14 +42,12 @@ def main():
                 print('BUYING: ', currency, int(diff*100))
                 con.create_market_buy_order(
                     currency, 
-                    int(diff*100)
-                    )
+                    int(diff*100))
             elif diff < -0.02:
                 print('SELLING: ', currency, -1*int(diff*100))
                 con.create_market_sell_order(
                     currency, 
-                    -1*int(diff*100)
-                    )  
+                    -1*int(diff*100))  
     # Finally   
     con.close()
     K.clear_session()
