@@ -15,12 +15,13 @@ def check_dataset(dataset_path):
         return True
 
 def main():
+    model_config = json.load(open("config.json", "r"))["model"]
     dataset_path = 'data/'
     # Requirement: Check the presence of the dataset
     if check_dataset(dataset_path):
         configs = json.load(open('config.json', 'r'))
         # 1) Build the model
-        model = Model()
+        model = Model(model_config=model_config)
         model.build_model(configs)
         batch_size, epochs,  = 32, 3
         cols = configs['training']['cols']
