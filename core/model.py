@@ -6,13 +6,17 @@ from keras.models import Sequential
 from keras.callbacks import EarlyStopping, ModelCheckpoint
 class Model():  
     def __init__(self, model_config):
-        self.cfg = model_config
         self.model = Sequential()
+        self.loss = model_config['loss']
+        self.optimizer = model_config['optimizer']
+        self.metrics = model_config['metrics']
+        self.step_size = model_config['step_size']
+        self.filename = model_config['filename']
+        self.callbacks = model_config['callbacks']
 
     def build_model(self, configs):
-        loss, optimizer, metrics, step_size = self.cfg['loss'], self.cfg['optimizer'], self.cfg['metrics'],  self.cfg['step_size']
         self.model.add(LSTM(100, input_shape=(
-                    step_size, 1), return_sequences=True))
+                    self.step_size, 1), return_sequences=True))
         self.model.add(Dropout(0.2))
         self.model.add(LSTM(100, input_shape=(
                     None, None), return_sequences=True))
@@ -21,15 +25,13 @@ class Model():
         self.model.add(Dropout(0.2))
         self.model.add(Dense(1, activation="linear"))
         self.model.compile(
-            loss=loss, optimizer=optimizer, metrics=metrics)
+            loss=self.loss, optimizer=self.optimizer, metrics=self.metrics)
 
     def train(self, X_train, X_test, y_train, y_test, epochs, batch_size, save_dir):
-        callbacks, loss, optimizer, metrics, filename = self.cfg['callbacks'], self.cfg['loss'], self.cfg['optimizer'], self.cfg['metrics'], self.cfg['filename']
-        monitor, save_best_only, patience = callbacks['monitor'], callbacks['save_best_only'], callbacks['patience']
-        save_fname = os.path.join(save_dir, filename )
+        save_fname = os.path.join(save_dir, self.filename )
         callbacks = [
-            EarlyStopping(monitor=monitor, patience=patience),
-            ModelCheckpoint(filepath=save_fname, monitor=monitor, save_best_only=save_best_only)
+            EarlyStopping(monitor=self.callbacks["monitor"], patience=self.callbacks["patience"]),
+            ModelCheckpoint(filepath=save_fname, monitor=self.callbacks["monitor"], save_best_only=self.callbacks['save_best_only'])
         ]
         self.model.fit(
             X_train, y_train, validation_data=(X_test,y_test),
