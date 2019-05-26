@@ -4,8 +4,6 @@ import requests
 import fxcmpy
 from sklearn.preprocessing import StandardScaler
 import dask.dataframe as dd
-from pylab import plt
-plt.style.use('seaborn')
 
 class DataModel():
 
@@ -16,19 +14,12 @@ class DataModel():
         self.dataY = np.array([])
         self.scaler = StandardScaler()
 
-    def req_data(self, currency, cols, api_key, con):        
+    def req_data(self, currency, cols, api_key, con, period):        
         self.con = con
-        cur1, cur2 = currency.split('/')[0], currency.split('/')[1]
-        req = requests.get('https://www.alphavantage.co/query?function=FX_INTRADAY&from_symbol={}&outputsize=full&to_symbol={}&interval=1min&apikey={}'.format(cur1, cur2, api_key))
-        full_data = req.json()
-        full_data_keys = list(full_data.keys())
-        if len(full_data_keys) > 1:
-            full_data = full_data[full_data_keys[1]]
-            self.data = [full_data[date][cols] for date in full_data][:249]
-            return True
-        else:
-            print(req.json())
-            return False
+        data = con.get_candles(currency, period=period, number=250)
+        self.data = data[cols].values.tolist()[-249:]
+        return True
+
     def get_train_data(self, data, seq_len):
         self.data = data
         data_x, data_y = [], []
