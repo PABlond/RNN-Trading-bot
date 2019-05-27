@@ -1,4 +1,3 @@
-WIP
 # Information
 Stock Price Prediction with Recurrent Neural Networks (RNN) mostly built with Keras.
 
