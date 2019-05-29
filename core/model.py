@@ -15,7 +15,7 @@ class Model():
         self.callbacks = model_config['callbacks']
 
     def build_model(self, configs):
-        self.model.add(LSTM(100, input_shape=(
+        self.model.add(LSTM(249, input_shape=(
                     self.step_size, 1), return_sequences=True))
         self.model.add(Dropout(0.2))
         self.model.add(LSTM(100, input_shape=(
