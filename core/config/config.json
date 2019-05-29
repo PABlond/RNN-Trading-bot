@@ -1,13 +1,30 @@
 {
     "data": {
-        "alphavantage_KEY": "<ALPHAVANTAGE_API_KEY>",
         "sequence_length": 250,
-        "fxcmpy_cfg": "core/config/fxcm.cfg"
+        "fxcmpy_cfg": "fxcm.cfg"
     },
     "prediction": {
-        "cols": "4. close"
+        "cols": "bidclose",
+        "period": [{
+            "lapse": "m1",
+            "prediction_len": 10
+        }, {
+            "lapse": "m5",
+            "prediction_len": 2
+        }]
     },
     "training": {
         "cols": ["<CLOSE>"]
+    },
+    "model": {
+        "loss": "mean_squared_error",
+        "optimizer": "adam",
+        "metrics": ["mean_squared_error"],
+        "filename": "model.h5",
+        "callback": {
+            "monitor": "loss",
+            "save_best_only" : true,
+            "patience": 1
+        }
     }
 }

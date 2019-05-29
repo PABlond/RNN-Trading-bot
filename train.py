@@ -23,7 +23,7 @@ def main():
         # 1) Build the model
         model = Model(model_config=model_config)
         model.build_model(configs)
-        batch_size, epochs,  = 32, 3
+        batch_size, epochs,  = 32, 10
         cols = configs['training']['cols']
         sequence_length = configs['data']['sequence_length']
         save_dir = "model"
@@ -42,7 +42,7 @@ def main():
                     data=[x for x in chunk.get(cols).values.tolist()],
                     seq_len=sequence_length)
                 X_train, X_test, y_train, y_test = train_test_split(data.dataX, data.dataY, test_size=0.33)
-        
+                print(y_train.shape)
                 # 5) Train the model       
                 model.train(
                     X_train, X_test, y_train, y_test,
