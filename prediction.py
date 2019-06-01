@@ -43,51 +43,50 @@ def main():
     currencies = con.get_instruments()[:20]
     # Loop over currencies
     for currency in currencies:
-        con.close_all_for_symbol(currency)
-        # Close previous prediction for this currency
-        # diff = request_and_predict(
-        #     con=con,
-        #     currency=currency)
-        # # Decide to buy or to sell from the difference
-        # print("Prediction of {} - {}".format(currency, diff))
-        # #
-        # is_position_open = False
-        # amount_bought = 0
-        # for open_position in open_positions:
-        #     position_cur = open_position[5]
-        #     if position_cur == currency:
-        #         is_position_open = True
-        #         amount_bought = open_position[2]
+        # con.close_all_for_symbol(currency)
+        diff = request_and_predict(
+            con=con,
+            currency=currency)
+        # Decide to buy or to sell from the difference
+        print("Prediction of {} - {}".format(currency, diff))
+        #
+        is_position_open = False
+        amount_bought = 0
+        for open_position in open_positions:
+            position_cur = open_position[5]
+            if position_cur == currency:
+                is_position_open = True
+                amount_bought = open_position[2]
 
-        # if is_position_open and diff < 0.2 and diff > -0.2:
-        #     con.close_all_for_symbol(currency)
-        # elif is_position_open:
-        #     if diff > 0.2 or diff < -0.2:
-        #         amount_to_buy = int(diff*1000) - amount_bought # -27
-        #         if amount_to_buy > 0:
-        #             print('BUYING: ', currency, amount_to_buy, int(diff*1000), amount_bought)
-        #             con.create_market_buy_order(
-        #                 currency, 
-        #                 amount_to_buy)
-        #         elif amount_to_buy < 0:
-        #             print('SELLING: ', currency, -1*amount_to_buy, int(diff*1000), amount_bought)
-        #             con.create_market_sell_order(
-        #                 currency, 
-        #                 -1*amount_to_buy)  
-        # else:
-        #     amount_to_buy = int(diff*1000)
-        #     if diff > 0.2:
-        #         if is_position_open:
-        #             amount_to_buy -= amount_bought
-        #         print('BUYING: ', currency, amount_to_buy)
-        #         con.create_market_buy_order(
-        #             currency, 
-        #             amount_to_buy)
-        #     elif diff < -0.2:
-        #         print('SELLING: ', currency, -1*amount_to_buy)
-        #         con.create_market_sell_order(
-        #             currency, 
-        #             -1*int(diff*1000))  
+        if is_position_open and diff < 0.2 and diff > -0.2:
+            con.close_all_for_symbol(currency)
+        elif is_position_open:
+            if diff > 0.2 or diff < -0.2:
+                amount_to_buy = int(diff*1000) - amount_bought # -27
+                if amount_to_buy > 0:
+                    print('BUYING: ', currency, amount_to_buy, int(diff*1000), amount_bought)
+                    con.create_market_buy_order(
+                        currency, 
+                        amount_to_buy)
+                elif amount_to_buy < 0:
+                    print('SELLING: ', currency, -1*amount_to_buy, int(diff*1000), amount_bought)
+                    con.create_market_sell_order(
+                        currency, 
+                        -1*amount_to_buy)  
+        else:
+            amount_to_buy = int(diff*1000)
+            if diff > 0.2:
+                if is_position_open:
+                    amount_to_buy -= amount_bought
+                print('BUYING: ', currency, amount_to_buy)
+                con.create_market_buy_order(
+                    currency, 
+                    amount_to_buy)
+            elif diff < -0.2:
+                print('SELLING: ', currency, -1*amount_to_buy)
+                con.create_market_sell_order(
+                    currency, 
+                    -1*int(diff*1000))  
     # Finally   
     con.close()
     K.clear_session()
