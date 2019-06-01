@@ -23,7 +23,7 @@ def main():
         # 1) Build the model
         model = Model(model_config=model_config)
         model.build_model(configs)
-        batch_size, epochs,  = 32, 10
+        batch_size, epochs,  = 4, 30
         cols = configs['training']['cols']
         sequence_length = configs['data']['sequence_length']
         save_dir = "model"
